@@ -1,0 +1,39 @@
+NAME
+    File::Extract - Extract Text From Arbitrary File Types
+
+SYNOPSIS
+      use File::Extract;
+      my $e = File::Extract->new();
+      my $r = $e->extract($filename);
+
+      my $e = File::Extract->new(encodings => [...]);
+
+      my $class = "MyExtractor";
+      File::Extract->register($class);
+
+DESCRIPTION
+    File::Extract is a framework to extract text data out of arbitrary file
+    types, useful to collect data for indexing.
+
+CLASS METHODS
+  register($class)
+    Registers a new text-extractor. The specified class needs to implement
+    two functions:
+
+    mime_type(void)
+        Returns the MIME type that $class can extract files from.
+
+    extract($file)
+        Extracts the text from $file. Returns a File::Extract::Result
+        object.
+
+METHODS
+  new(%args)
+  extract($file)
+SEE ALSO
+    File::MMagic::XS
+
+AUTHOR
+    Copyright 2005 Daisuke Maki <dmaki@cpan.org>. All rights reserved.
+    Development funded by Brazil, Ltd. <http://b.razil.jp>
+
