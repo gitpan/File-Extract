@@ -8,7 +8,10 @@ WriteMakefile
           'VERSION_FROM' => 'lib/File/Extract.pm',
           'PREREQ_PM' => {
                            'RTF::Lexer' => 0,
+                           'IO::Scalar' => 0,
                            'File::MMagic::XS' => 0,
+                           'UNIVERSAL::isa' => 0,
+                           'IPC::Open2' => 0,
                            'MP3::Info' => 0,
                            'HTML::TreeBuilder' => 0,
                            'Encode' => 0

@@ -9,16 +9,22 @@ SYNOPSIS
       my $e = File::Extract->new(encodings => [...]);
 
       my $class = "MyExtractor";
-      File::Extract->register($class);
+      File::Extract->register_processor($class);
+
+      my $filter = MyCustomFilter->new;
+      File::Extact->register_filter($mime_type => $filter);
 
 DESCRIPTION
     File::Extract is a framework to extract text data out of arbitrary file
     types, useful to collect data for indexing.
 
 CLASS METHODS
-  register($class)
-    Registers a new text-extractor. The specified class needs to implement
-    two functions:
+  register_processor($class)
+    Registers a new text-extractor. The processor is used as the default
+    processor for a given MIME type, but it can be overridden by specifying
+    the 'processors' parameter
+
+    The specified class needs to implement two functions:
 
     mime_type(void)
         Returns the MIME type that $class can extract files from.
@@ -27,16 +33,45 @@ CLASS METHODS
         Extracts the text from $file. Returns a File::Extract::Result
         object.
 
+  register_filter($mime_type, $filter)
+    Registers a filter to be used when a particular mime type has been
+    found.
+
 METHODS
+  new(%args)
+    filters
+        A hashref of filters to be applied before attempting to extract the
+        text out of it.
+
+        Here's a trivial example that puts line numbers in the beginning of
+        each line before extracting the output out of it.
+
+          use File::Extract;
+          use File::Extract::Filter::Exec;
+
+          my $extract = File::Extract->new(
+            filters => {
+              'text/plain' => [
+                File::Extract::Filter::Exec->new(cmd => "perl -pe 's/^/\$. /'")
+              ]
+            }
+          );
+          my $r = $extract->extract($file);
+
+    processors
+        A list of processors to be used for this instance. This overrides
+        any processors that were registered previously via
+        register_processor() class method.
+
     encodings
-    List of encodings that you expect your files to be in. This is used to
-    re-encode and normalize the contents of the file via Encode::Guess.
+        List of encodings that you expect your files to be in. This is used
+        to re-encode and normalize the contents of the file via
+        Encode::Guess.
 
     output_encoding
-    The final encoding that you the extracted test to be in. The default
-    encoding is UTF8.
+        The final encoding that you the extracted test to be in. The default
+        encoding is UTF8.
 
-  new(%args)
   extract($file)
 SEE ALSO
     File::MMagic::XS

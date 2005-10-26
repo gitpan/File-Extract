@@ -11,8 +11,8 @@ use MP3::Info qw(get_mp3tag);
 sub mime_type { 'audio/mpeg' }
 sub extract
 {
-    my $class = shift;
-    my $file  = shift;
+    my $self = shift;
+    my $file = shift;
 
     my $hash   = get_mp3tag($file);
     my %p;
@@ -22,9 +22,12 @@ sub extract
         $p{lc $field} = $value;
     }
 
-    $p{file} = $file;
-    my $result = File::Extract::Result->new(%p);
-    return $result;
+    my $r = File::Extract::Result->new(
+        metadata  => %p,
+        filename  => $file,
+        mime_type => $self->mime_type,
+    );
+    return $r;
 }
 
 1;

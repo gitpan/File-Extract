@@ -21,11 +21,12 @@ sub extract
     $text = $tree->as_text;
     $tree->delete;
 
-    my $result = File::Extract::Result->new(
-        text => $text,
-        file => $file
+    my $r = File::Extract::Result->new(
+        text      => eval { $self->recode($text) } || $text,
+        filename  => $file,
+        mime_type => $self->mime_type,
     );
-    return $result;
+    return $r;
 }
 
 1;

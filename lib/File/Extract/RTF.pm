@@ -31,8 +31,9 @@ sub extract
     } until $p->is_stop_token($token);
 
     return File::Extract::Result->new(
-        text => eval { $self->recode($text) } || $text,
-        file => $file
+        text      => eval { $self->recode($text) } || $text,
+        filename  => $file,
+        mime_type => $self->mime_type,
     );
 }
 

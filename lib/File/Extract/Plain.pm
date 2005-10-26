@@ -10,12 +10,17 @@ use base qw(File::Extract::Base);
 sub mime_type { 'text/plain' }
 sub extract
 {
-    my $class = shift;
-    my $file  = shift;
+    my $self = shift;
+    my $file = shift;
 
     open(F, $file) or Carp::croak("Failed to open file $file: $!");
     local $/ = undef;
-    return scalar(<F>);
+    my $text = scalar(<F>);
+    my $r = File::Extract::Result->new(
+        text      => eval { $self->recode($text) } || $text, 
+        mime_type => $self->mime_type,
+        filename  => $file,
+    );
 }
 
 1;

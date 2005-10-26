@@ -6,8 +6,9 @@
 package File::Extract;
 use strict;
 use base qw(Class::Data::Inheritable);
-use File::MMagic::XS;
-our $VERSION = '0.02';
+use File::MMagic::XS qw(:compat);
+use File::Temp();
+our $VERSION = '0.03';
 
 sub new
 {
@@ -18,6 +19,8 @@ sub new
     my @encodings = $args{encodings} ?
         (ref($args{encodings}) eq 'ARRAY' ? @{$args{encodings}} : $args{encodings}) : ();
     my $self  = bless {
+        filters => $args{filters},
+        processors => $args{processors},
         magic => 
             $args{file_mmagic_args} ?
                 File::MMagic::XS->new(%{$args{file_mmagic_args}}) :
@@ -29,7 +32,7 @@ sub new
     return $self;
 }
 
-sub register
+sub register_processor
 {
     my $class = shift;
     my $pkg   = shift;
@@ -40,30 +43,116 @@ sub register
     push @{$class->RegisteredProcessors->{$mime}}, $pkg;
 }
 
+sub register_filter
+{
+    my $class = shift;
+    my $pkg   = shift;
+
+    eval "require $pkg" or die;
+    my $mime  = $pkg->mime_type;
+    $class->RegisteredFilter->{$mime} ||= [];
+    push @{$class->RegisteredFilter->{$mime}}, $pkg;
+}
+
+sub _processors
+{
+    my $self = shift;
+    my $mime = shift;
+
+    my $processors;
+
+    # First, check if we have instance specific processors
+    $processors = $self->{processors}{$mime};
+    if ($processors) {
+        return @$processors;
+    }
+
+    $processors = ref($self)->RegisteredProcessors->{$mime};
+    if ($processors) {
+        return @$processors;
+    }
+
+    return ();
+}
+
+sub _filters
+{
+    my $self = shift;
+    my $mime = shift;
+
+    my $filters;
+
+    # First, check if we have instance specific filters
+    $filters = $self->{filters}{$mime};
+    if ($filters) {
+        return @$filters;
+    }
+
+    $filters = ref($self)->RegisteredFilters->{$mime};
+    if ($filters) {
+        return @$filters;
+    }
+
+    return ();
+}
+
 sub extract
 {
     my $self  = shift;
     my $file  = shift;
 
     my $magic = $self->{magic};
-    my $mime  = $magic->get_mime($file);
+    my $mime  = $magic->checktype_filename($file);
     return unless $mime;
+    my $o_mime = $mime;
 
-    my $procs = $self->RegisteredProcessors->{$mime};
+    my $tmp;
+    my $source = $file;
+    if (my @filters = $self->_filters($mime)) {
+        # Filters are applied one after the other, even if that may cause the
+        # underlying MIME type to change (i.e. maybe you are crazy enough to
+        # apply a filter that changes a plain text file to HTML -- god knows
+        # why ;). This may be a bit confusing, since text extractors are
+        # applied from the MIME type of the resulting file.
+        foreach my $f (@filters) {
+            $tmp = File::Temp->new(UNLINK => 1);
+            $f->filter(file => $source, output => $tmp);
+            $source = $tmp->filename;
+        }
 
-    foreach my $pkg (@$procs) {
-        my $p = $pkg->new(
-            encodings       => $self->{encodings},
-            output_encoding => $self->{output_encoding}
-        );
-        my $r = eval { $p->extract($file) };
-        return $r if $r;
+        $tmp->flush;
+        $mime = $magic->checktype_filename($source);
+        return unless $mime;
     }
+
+    if (my @processors = $self->_processors($mime)) {
+        foreach my $pkg (@processors) {
+            my $p = $pkg->new(
+                encodings       => $self->{encodings},
+                output_encoding => $self->{output_encoding}
+            );
+            my $r = eval { $p->extract($source) };
+
+            # Restore the original mime type of the source file. This is
+            # required because we might have passed through several filters
+            if ($r) {
+                if ($source ne $file) {
+                    $r->filename($file);
+                    $r->mime_type($o_mime);
+                }
+                return $r;
+            }
+        }
+    }
+
+    return undef;
 }
 
 BEGIN
 {
+    __PACKAGE__->mk_classdata('RegisteredFilters');
     __PACKAGE__->mk_classdata('RegisteredProcessors');
+    __PACKAGE__->RegisteredFilters({});
     __PACKAGE__->RegisteredProcessors({});
 
     my @p = qw(
@@ -73,7 +162,7 @@ BEGIN
         File::Extract::RTF
     );
     foreach my $p (@p) {
-        __PACKAGE__->register($p);
+        __PACKAGE__->register_processor($p);
     }
 }
 
@@ -94,7 +183,10 @@ File::Extract - Extract Text From Arbitrary File Types
   my $e = File::Extract->new(encodings => [...]);
 
   my $class = "MyExtractor";
-  File::Extract->register($class);
+  File::Extract->register_processor($class);
+
+  my $filter = MyCustomFilter->new;
+  File::Extact->register_filter($mime_type => $filter);
 
 =head1 DESCRIPTION
 
@@ -103,10 +195,13 @@ useful to collect data for indexing.
 
 =head1 CLASS METHODS
 
-=head2 register($class)
+=head2 register_processor($class)
 
-Registers a new text-extractor. The specified class needs to implement
-two functions:
+Registers a new text-extractor. The processor is used as the default processor
+for a given MIME type, but it can be overridden by specifying the 'processors'
+parameter
+
+The specified class needs to implement two functions:
 
 =over 4
 
@@ -120,7 +215,41 @@ Extracts the text from $file. Returns a File::Extract::Result object.
 
 =back
 
+=head2 register_filter($mime_type, $filter)
+
+Registers a filter to be used when a particular mime type has been found.
+
 =head1 METHODS
+
+=head2 new(%args)
+
+=over 4
+
+=item filters
+
+A hashref of filters to be applied before attempting to extract the text
+out of it. 
+
+Here's a trivial example that puts line numbers in the beginning of each line
+before extracting the output out of it.
+
+  use File::Extract;
+  use File::Extract::Filter::Exec;
+
+  my $extract = File::Extract->new(
+    filters => {
+      'text/plain' => [
+        File::Extract::Filter::Exec->new(cmd => "perl -pe 's/^/\$. /'")
+      ]
+    }
+  );
+  my $r = $extract->extract($file);
+
+=item processors
+
+A list of processors to be used for this instance. This overrides any
+processors that were registered previously via register_processor() class
+method.
 
 =item encodings
 
@@ -132,7 +261,7 @@ re-encode and normalize the contents of the file via Encode::Guess.
 The final encoding that you the extracted test to be in. The default
 encoding is UTF8.
 
-=head2 new(%args)
+=back
 
 =head2 extract($file)
 

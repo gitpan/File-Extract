@@ -17,8 +17,11 @@ my $build = Module::Build->new(
         'Encode'            => 0,
         'File::MMagic::XS'  => 0,
         'HTML::TreeBuilder' => 0,
+        'IO::Scalar'        => 0,
+        'IPC::Open2'        => 0,
         'MP3::Info'         => 0,
         'RTF::Lexer'        => 0,
+        'UNIVERSAL::isa'    => 0,
     },
 );
 
