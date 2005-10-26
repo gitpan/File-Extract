@@ -1,4 +1,4 @@
-# $Id: Base.pm 2 2005-10-26 01:53:50Z daisuke $
+# $Id: Base.pm 3 2005-10-26 02:03:05Z daisuke $
 #
 # Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
 # All rights reserved.
@@ -14,9 +14,11 @@ sub new
     my $class = shift;
     my %args  = @_;
 
+    my $encoding  = $args{output_encoding} || 'utf8';
     my @encodings = $args{encodings} ?
         (ref($args{encodings}) eq 'ARRAY' ? @{$args{encodings}} : $args{encodings}) : ();
     return bless {
+        output_encoding => $encoding,
         encodings => \@encodings
     }, $class;
 }
@@ -30,7 +32,7 @@ sub recode
 
     my $enc = eval { guess_encoding($text, @{$self->{encodings}}) };
     ref($enc) or die "Can't guess: $enc";
-    return encode('euc-jp', $enc->decode($text), FB_PERLQQ);
+    return encode($self->{output_encoding}, $enc->decode($text), FB_PERLQQ);
 }
 
 1;

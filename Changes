@@ -3,6 +3,9 @@ Changes
 
 Changes by Daisuke Maki unless otherwise noted.
 
+0.02 - 26 Oct 2005
+  - output_encoding 
+
 0.01 - 26 Oct 2005
   - Initial CPAN Release.
   - TODO tests.

@@ -1,4 +1,4 @@
-# $Id: Extract.pm 2 2005-10-26 01:53:50Z daisuke $
+# $Id: Extract.pm 4 2005-10-26 02:03:34Z daisuke $
 #
 # Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
 # All rights reserved.
@@ -7,21 +7,23 @@ package File::Extract;
 use strict;
 use base qw(Class::Data::Inheritable);
 use File::MMagic::XS;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub new
 {
     my $class = shift;
     my %args  = @_;
 
+    my $encoding  = $args{output_encoding} || 'utf8';
     my @encodings = $args{encodings} ?
         (ref($args{encodings}) eq 'ARRAY' ? @{$args{encodings}} : $args{encodings}) : ();
     my $self  = bless {
         magic => 
-            $args{file_mmagic__args} ?
+            $args{file_mmagic_args} ?
                 File::MMagic::XS->new(%{$args{file_mmagic_args}}) :
                 File::MMagic::XS->new(),
-        encodings => \@encodings
+        encodings => \@encodings,
+        output_encoding => $encoding
     }, $class;
 
     return $self;
@@ -50,7 +52,10 @@ sub extract
     my $procs = $self->RegisteredProcessors->{$mime};
 
     foreach my $pkg (@$procs) {
-        my $p = $pkg->new(encodings => $self->{encodings});
+        my $p = $pkg->new(
+            encodings       => $self->{encodings},
+            output_encoding => $self->{output_encoding}
+        );
         my $r = eval { $p->extract($file) };
         return $r if $r;
     }
@@ -116,6 +121,16 @@ Extracts the text from $file. Returns a File::Extract::Result object.
 =back
 
 =head1 METHODS
+
+=item encodings
+
+List of encodings that you expect your files to be in. This is used to
+re-encode and normalize the contents of the file via Encode::Guess.
+
+=item output_encoding
+
+The final encoding that you the extracted test to be in. The default
+encoding is UTF8.
 
 =head2 new(%args)
 

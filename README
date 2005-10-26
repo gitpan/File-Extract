@@ -28,6 +28,14 @@ CLASS METHODS
         object.
 
 METHODS
+    encodings
+    List of encodings that you expect your files to be in. This is used to
+    re-encode and normalize the contents of the file via Encode::Guess.
+
+    output_encoding
+    The final encoding that you the extracted test to be in. The default
+    encoding is UTF8.
+
   new(%args)
   extract($file)
 SEE ALSO
