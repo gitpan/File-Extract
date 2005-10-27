@@ -1,5 +1,5 @@
 #!perl
-# $Id: Build.PL 2 2005-10-26 01:53:50Z daisuke $
+# $Id: Build.PL 5 2005-10-26 16:51:24Z daisuke $
 #
 # Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
 # All rights reserved.
@@ -7,22 +7,37 @@
 use strict;
 use Module::Build;
 
+my %requires = (
+    'CAM::PDF'          => 0,
+    'Encode'            => 0,
+    'File::MMagic::XS'  => 0,
+    'HTML::TreeBuilder' => 0,
+    'IO::Scalar'        => 0,
+    'IPC::Open2'        => 0,
+    'MP3::Info'         => 0,
+    'RTF::Lexer'        => 0,
+    'UNIVERSAL::isa'    => 0,
+);
+
+print <<EOM;
+  File::Extract experimentally uses CAM::PDF to extract text out of PDF
+  files. We may or may not change this in the future, so we can remove
+  this from the dependency list if you don't want to parse PDF right at
+  this moment.
+
+EOM
+
+if (! Module::Build->y_n('  Keep CAM::PDF in the dependency list? ', 'n')) {
+    delete $requires{'CAM::PDF'};
+}
+
 my $build = Module::Build->new(
     dist_name          => 'File-Extract',
     dist_version_from  => 'lib/File/Extract.pm',
     license            => 'perl',
     create_makefile_pl => 'traditional',
     create_readme      => 1,
-    requires           => {
-        'Encode'            => 0,
-        'File::MMagic::XS'  => 0,
-        'HTML::TreeBuilder' => 0,
-        'IO::Scalar'        => 0,
-        'IPC::Open2'        => 0,
-        'MP3::Info'         => 0,
-        'RTF::Lexer'        => 0,
-        'UNIVERSAL::isa'    => 0,
-    },
+    requires           => \%requires
 );
 
 $build->create_build_script;

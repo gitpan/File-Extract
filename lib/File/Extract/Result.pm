@@ -1,4 +1,4 @@
-# $Id: Result.pm 2 2005-10-26 01:53:50Z daisuke $
+# $Id: Result.pm 5 2005-10-26 16:51:24Z daisuke $
 #
 # Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
 # All rights reserved.

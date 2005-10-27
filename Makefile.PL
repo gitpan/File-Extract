@@ -14,7 +14,8 @@ WriteMakefile
                            'IPC::Open2' => 0,
                            'MP3::Info' => 0,
                            'HTML::TreeBuilder' => 0,
-                           'Encode' => 0
+                           'Encode' => 0,
+                           'CAM::PDF' => 0
                          }
         )
 ;

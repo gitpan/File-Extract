@@ -2,8 +2,12 @@ Build.PL
 Changes
 lib/File/Extract.pm
 lib/File/Extract/Base.pm
+lib/File/Extract/Filter.pm
+lib/File/Extract/Filter/Base.pm
+lib/File/Extract/Filter/Exec.pm
 lib/File/Extract/HTML.pm
 lib/File/Extract/MP3.pm
+lib/File/Extract/PDF.pm
 lib/File/Extract/Plain.pm
 lib/File/Extract/Result.pm
 lib/File/Extract/RTF.pm
@@ -11,5 +15,7 @@ Makefile.PL
 MANIFEST			This list of files
 META.yml
 README
+t/01-sanity.t
+t/03-filter.t
 t/99-pod-coverage.t
 t/99-pod.t

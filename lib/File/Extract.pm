@@ -1,4 +1,4 @@
-# $Id: Extract.pm 4 2005-10-26 02:03:34Z daisuke $
+# $Id: Extract.pm 5 2005-10-26 16:51:24Z daisuke $
 #
 # Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
 # All rights reserved.
@@ -8,7 +8,7 @@ use strict;
 use base qw(Class::Data::Inheritable);
 use File::MMagic::XS qw(:compat);
 use File::Temp();
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub new
 {
@@ -158,6 +158,7 @@ BEGIN
     my @p = qw(
         File::Extract::HTML
         File::Extract::MP3
+        File::Extract::PDF
         File::Extract::Plain
         File::Extract::RTF
     );
