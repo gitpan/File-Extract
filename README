@@ -39,6 +39,14 @@ CLASS METHODS
 
 METHODS
   new(%args)
+    magic
+        Returns the File::MMagic::XS object that used by the object. Use
+        this to modify, set options, etc. E.g.:
+
+          my $extract = File::Extract->new(...);
+          $extract->magic->add_file_ext(t => 'text/perl-test');
+          $extract->extract(...);
+
     filters
         A hashref of filters to be applied before attempting to extract the
         text out of it.

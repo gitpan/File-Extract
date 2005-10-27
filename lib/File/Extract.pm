@@ -1,4 +1,4 @@
-# $Id: Extract.pm 5 2005-10-26 16:51:24Z daisuke $
+# $Id: Extract.pm 6 2005-10-27 01:43:47Z daisuke $
 #
 # Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
 # All rights reserved.
@@ -8,7 +8,7 @@ use strict;
 use base qw(Class::Data::Inheritable);
 use File::MMagic::XS qw(:compat);
 use File::Temp();
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 sub new
 {
@@ -31,6 +31,8 @@ sub new
 
     return $self;
 }
+
+sub magic { shift->{magic} }
 
 sub register_processor
 {
@@ -156,6 +158,7 @@ BEGIN
     __PACKAGE__->RegisteredProcessors({});
 
     my @p = qw(
+        File::Extract::Excel
         File::Extract::HTML
         File::Extract::MP3
         File::Extract::PDF
@@ -225,6 +228,15 @@ Registers a filter to be used when a particular mime type has been found.
 =head2 new(%args)
 
 =over 4
+
+=item magic
+
+Returns the File::MMagic::XS object that used by the object. Use this to
+modify, set options, etc. E.g.:
+
+  my $extract = File::Extract->new(...);
+  $extract->magic->add_file_ext(t => 'text/perl-test');
+  $extract->extract(...);
 
 =item filters
 

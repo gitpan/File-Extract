@@ -1,5 +1,5 @@
 #!perl
-# $Id: Build.PL 5 2005-10-26 16:51:24Z daisuke $
+# $Id: Build.PL 6 2005-10-27 01:43:47Z daisuke $
 #
 # Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
 # All rights reserved.

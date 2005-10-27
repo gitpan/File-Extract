@@ -1,4 +1,4 @@
-# $Id$
+# $Id: PDF.pm 6 2005-10-27 01:43:47Z daisuke $
 #
 # Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
 # All rights reserved.
@@ -30,3 +30,11 @@ sub extract
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+File::Extract::PDF - Extract Text From PDF
+
+=cut

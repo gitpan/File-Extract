@@ -2,6 +2,7 @@ Build.PL
 Changes
 lib/File/Extract.pm
 lib/File/Extract/Base.pm
+lib/File/Extract/Excel.pm
 lib/File/Extract/Filter.pm
 lib/File/Extract/Filter/Base.pm
 lib/File/Extract/Filter/Exec.pm
