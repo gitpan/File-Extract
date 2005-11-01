@@ -3,6 +3,9 @@ Changes
 
 Changes by Daisuke Maki unless otherwise noted.
 
+0.06 - 01 Nov 2005
+  - Tweak Build.PL. Reported by Jose Castro.
+
 0.05 - 28 Oct 2005
   - Add File::Extract::Excel (experimental)
 

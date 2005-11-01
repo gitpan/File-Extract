@@ -1,4 +1,4 @@
-# $Id$
+# $Id: Excel.pm 7 2005-10-27 15:15:18Z daisuke $
 #
 # Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
 # All rights reserved.

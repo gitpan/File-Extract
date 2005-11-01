@@ -1,6 +1,6 @@
 ---
 name: File-Extract
-version: 0.05
+version: 0.06
 author:
   - |-
     Copyright 2005 Daisuke Maki E<lt>dmaki@cpan.orgE<gt>. All rights reserved.
@@ -8,18 +8,20 @@ author:
 abstract: Extract Text From Arbitrary File Types
 license: perl
 requires:
+  CAM::PDF: 0
   Encode: 0
   File::MMagic::XS: 0
   HTML::TreeBuilder: 0
   IO::Scalar: 0
   IPC::Open2: 0
   MP3::Info: 0
-  RTF::Lexer: 0
+  RTF::HTMLConverter: 0
+  Spreadsheet::ParseExcel: 0
   UNIVERSAL::isa: 0
 provides:
   File::Extract:
     file: lib/File/Extract.pm
-    version: 0.05
+    version: 0.06
   File::Extract::Base:
     file: lib/File/Extract/Base.pm
   File::Extract::Excel:

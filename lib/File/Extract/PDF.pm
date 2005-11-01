@@ -1,4 +1,4 @@
-# $Id: PDF.pm 6 2005-10-27 01:43:47Z daisuke $
+# $Id: PDF.pm 7 2005-10-27 15:15:18Z daisuke $
 #
 # Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
 # All rights reserved.

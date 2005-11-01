@@ -1,14 +1,15 @@
-# $Id: Extract.pm 6 2005-10-27 01:43:47Z daisuke $
+# $Id: Extract.pm 7 2005-10-27 15:15:18Z daisuke $
 #
 # Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
 # All rights reserved.
 
 package File::Extract;
 use strict;
+use warnings;
 use base qw(Class::Data::Inheritable);
 use File::MMagic::XS qw(:compat);
 use File::Temp();
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub new
 {
