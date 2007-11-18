@@ -1,4 +1,4 @@
-# $Id: Base.pm 3 2005-10-26 02:03:05Z daisuke $
+# $Id: /mirror/perl/File-Extract/trunk/lib/File/Extract/Base.pm 4210 2007-10-27T13:43:07.499967Z daisuke  $
 #
 # Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
 # All rights reserved.

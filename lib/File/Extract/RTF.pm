@@ -1,4 +1,4 @@
-# $Id: RTF.pm 5 2005-10-26 16:51:24Z daisuke $
+# $Id: /mirror/perl/File-Extract/trunk/lib/File/Extract/RTF.pm 4210 2007-10-27T13:43:07.499967Z daisuke  $
 #
 # Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
 # All rights reserved.

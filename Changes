@@ -3,6 +3,10 @@ Changes
 
 Changes by Daisuke Maki unless otherwise noted.
 
+0.07000 - 18 Nov 2007
+  - Migrate to Module::Install
+  - Add Class::Data::Inheritable to dependencies. rt #30810
+
 0.06 - 01 Nov 2005
   - Tweak Build.PL. Reported by Jose Castro.
 

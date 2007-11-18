@@ -1,6 +1,6 @@
-# $Id: Extract.pm 7 2005-10-27 15:15:18Z daisuke $
+# $Id: /mirror/perl/File-Extract/trunk/lib/File/Extract.pm 9350 2007-11-18T13:33:38.729170Z daisuke  $
 #
-# Copyright (c) 2005 Daisuke Maki <dmaki@cpan.org>
+# Copyright (c) 2005-2007 Daisuke Maki <daisuke@endeworks.jp>
 # All rights reserved.
 
 package File::Extract;
@@ -9,7 +9,7 @@ use warnings;
 use base qw(Class::Data::Inheritable);
 use File::MMagic::XS qw(:compat);
 use File::Temp();
-our $VERSION = '0.06';
+our $VERSION = '0.07000';
 
 sub new
 {
@@ -285,7 +285,14 @@ L<File::MMagic::XS|File::MMagic::XS>
 
 =head1 AUTHOR
 
-Copyright 2005 Daisuke Maki E<lt>dmaki@cpan.orgE<gt>. All rights reserved.
-Development funded by Brazil, Ltd. E<lt>http://b.razil.jpE<gt>
+Copyright 2005-2007 Daisuke Maki E<lt>daisuke@endeworks.jpE<gt>.
+All rights reserved.
+
+=head1 LICENSE
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+See http://www.perl.com/perl/misc/Artistic.html
 
 =cut

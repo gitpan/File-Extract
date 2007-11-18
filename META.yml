@@ -1,14 +1,21 @@
----
-name: File-Extract
-version: 0.06
-author:
-  - |-
-    Copyright 2005 Daisuke Maki E<lt>dmaki@cpan.orgE<gt>. All rights reserved.
-    Development funded by Brazil, Ltd. E<lt>http://b.razil.jpE<gt>
+--- 
 abstract: Extract Text From Arbitrary File Types
+author: 
+  - Copyright 2005-2007 Daisuke Maki <daisuke@endeworks.jp>.
+distribution_type: module
+generated_by: Module::Install version 0.68
 license: perl
-requires:
+meta-spec: 
+  url: http://module-build.sourceforge.net/META-spec-v1.3.html
+  version: 1.3
+name: File-Extract
+no_index: 
+  directory: 
+    - inc
+    - t
+requires: 
   CAM::PDF: 0
+  Class::Data::Inheritable: 0
   Encode: 0
   File::MMagic::XS: 0
   HTML::TreeBuilder: 0
@@ -18,30 +25,4 @@ requires:
   RTF::HTMLConverter: 0
   Spreadsheet::ParseExcel: 0
   UNIVERSAL::isa: 0
-provides:
-  File::Extract:
-    file: lib/File/Extract.pm
-    version: 0.06
-  File::Extract::Base:
-    file: lib/File/Extract/Base.pm
-  File::Extract::Excel:
-    file: lib/File/Extract/Excel.pm
-  File::Extract::Filter:
-    file: lib/File/Extract/Filter.pm
-  File::Extract::Filter::Base:
-    file: lib/File/Extract/Filter/Base.pm
-  File::Extract::Filter::Exec:
-    file: lib/File/Extract/Filter/Exec.pm
-  File::Extract::HTML:
-    file: lib/File/Extract/HTML.pm
-  File::Extract::MP3:
-    file: lib/File/Extract/MP3.pm
-  File::Extract::PDF:
-    file: lib/File/Extract/PDF.pm
-  File::Extract::Plain:
-    file: lib/File/Extract/Plain.pm
-  File::Extract::RTF:
-    file: lib/File/Extract/RTF.pm
-  File::Extract::Result:
-    file: lib/File/Extract/Result.pm
-generated_by: Module::Build version 0.2611
+version: 0.07000
